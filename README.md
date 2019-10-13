@@ -1,1 +1,1 @@
-# mirumon-vk-bot
+Mirumon VK bot
