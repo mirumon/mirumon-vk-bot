@@ -11,4 +11,4 @@ TOKEN = config("TOKEN", cast=str)
 CONFIRMATION_TOKEN = config("CONFIRMATION_TOKEN", cast=str)
 GROUP_ID = config("GROUP_ID", cast=int)
 SERVER_URL = config("SERVER_URL", cast=str)
-API_VERSION = config("API_VERSION", cast=float, default=5.101)
+API_VERSION = config("API_VERSION", cast=float, default=5.101)  # noqa: WPS432

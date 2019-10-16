@@ -3,12 +3,11 @@ from enum import Enum
 from pydantic import BaseModel
 
 
-class MessageType(str, Enum):
+class MessageType(str, Enum):  # noqa: WPS600
     message_new: str = "message_new"
     message_reply: str = "message_reply"
     message_result: str = "ok"
     confirmation: str = "confirmation"
-    computer_list: str = "/computers"
 
 
 class MessageSender(BaseModel):
