@@ -1,6 +1,7 @@
 from typing import Union
 
 import requests
+import starlette
 import vk
 from fastapi import FastAPI, HTTPException
 
@@ -10,7 +11,7 @@ from response_models import *
 
 app = FastAPI()
 session = vk.Session()
-api = vk.API(session, v=5.101)
+api = vk.API(session, v=config.API_VERSION)
 
 
 @app.post("/callback")
@@ -21,7 +22,7 @@ def vk_callback(event: Union[Message, Registration]):
         user_id = event.object.from_id
         user_message = event.object.text
         bot_message = ''
-        if user_message == MessageType.about_computers:
+        if user_message == MessageType.computer_list:
             resp = requests.get(config.SERVER_URL + user_message)
             computers = [Computer(**current) for current in resp.json()]
             sorted(computers, key=lambda v: v.domain)
@@ -31,4 +32,4 @@ def vk_callback(event: Union[Message, Registration]):
                     f"{computer.name} [{computer.username}]\n"])
             api.messages.send(access_token=config.TOKEN, user_id=user_id, random_id='', message=bot_message)
             return MessageType.message_result
-    raise HTTPException(status_code=400, detail={"error": f"event '{event.type}' not supported"})
+    raise HTTPException(status_code=starlette.status, detail={"error": f"event '{event.type}' not supported"})

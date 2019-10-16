@@ -8,7 +8,7 @@ class MessageType(str, Enum):
     message_reply: str = "message_reply"
     message_result: str = "ok"
     confirmation: str = "confirmation"
-    about_computers: str = "/computers"
+    computer_list: str = "/computers"
 
 
 class MessageSender(BaseModel):
