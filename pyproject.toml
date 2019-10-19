@@ -2,7 +2,7 @@
 name = "mirumon-vk-bot"
 version = "0.0.1"
 description = ""
-authors = ["Leonid <amorilec@yandex.ru>"]
+authors = ["Leonid <amorilec@yandex.ru>", "Slyfoxy <khitrov34@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.7"

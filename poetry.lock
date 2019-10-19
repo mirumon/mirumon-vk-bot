@@ -3,8 +3,8 @@ category = "dev"
 description = "High level compatibility layer for multiple asynchronous event loop implementations"
 name = "anyio"
 optional = false
-python-versions = ">= 3.5.3"
-version = "1.1.0"
+python-versions = ">=3.5.3"
+version = "1.2.0"
 
 [package.dependencies]
 async-generator = "*"
@@ -615,7 +615,7 @@ description = "Experimental type system extensions for programs checked with the
 name = "mypy-extensions"
 optional = false
 python-versions = "*"
-version = "0.4.2"
+version = "0.4.3"
 
 [[package]]
 category = "dev"
@@ -1026,7 +1026,7 @@ content-hash = "08a199c86f1af66754750a520811e29a382af9f6604a60f5715cbf3d7810da5b
 python-versions = "^3.7"
 
 [metadata.hashes]
-anyio = ["7caccdb35163650e495fdecd5f29810cafb8e05caa1e2c4234abbcf5ab0b8e31", "9e05952f7a7b90307bf3dae17b1ce2ccb437f5924dca1303fb68892050d7b582"]
+anyio = ["0fba37b3f835ba6ebeb10e9754aff13e6fbc322f10ab1f2ab9e6c8534492930d", "5ed13f4668d219a30b5ca1f0cde5efaa94af272c02dd04f6429aaab35906f637"]
 appdirs = ["9e5896d1372858f8dd3344faf4e5014d21849c756c8d5701f78f8a103b372d92", "d8b24664561d0d34ddfaec54636d502d7cea6e29c3eaf68f3df6180863e2166e"]
 asgi-lifespan = ["6ae6cf8d35e7b8d1cee878ed749898c47eb191d392a5fe3a4c71586dd3cec4fe"]
 astor = ["0e41295809baf43ae8303350e031aff81ae52189b6f881f36d623fa8b2f1960e", "37a6eed8b371f1228db08234ed7f6cfdc7817a3ed3824797e20cbb11dc2a7862"]
@@ -1085,7 +1085,7 @@ markupsafe = ["00bc623926325b26bb9605ae9eae8a215691f33cae5df11ca5424f06f2d1f473"
 mccabe = ["ab8a6258860da4b6677da4bd2fe5dc2c659cff31b3ee4f7f5d64e79735b80d42", "dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f"]
 more-itertools = ["409cd48d4db7052af495b09dec721011634af3753ae1ef92d2b32f73a745f832", "92b8c4b06dac4f0611c0729b2f2ede52b2e1bac1ab48f089c7ddc12e26bb60c4"]
 mypy = ["1d98fd818ad3128a5408148c9e4a5edce6ed6b58cc314283e631dd5d9216527b", "22ee018e8fc212fe601aba65d3699689dd29a26410ef0d2cc1943de7bec7e3ac", "3a24f80776edc706ec8d05329e854d5b9e464cd332e25cde10c8da2da0a0db6c", "42a78944e80770f21609f504ca6c8173f7768043205b5ac51c9144e057dcf879", "4b2b20106973548975f0c0b1112eceb4d77ed0cafe0a231a1318f3b3a22fc795", "591a9625b4d285f3ba69f541c84c0ad9e7bffa7794da3fa0585ef13cf95cb021", "5b4b70da3d8bae73b908a90bb2c387b977e59d484d22c604a2131f6f4397c1a3", "84edda1ffeda0941b2ab38ecf49302326df79947fa33d98cdcfbf8ca9cf0bb23", "b2b83d29babd61b876ae375786960a5374bba0e4aba3c293328ca6ca5dc448dd", "cc4502f84c37223a1a5ab700649b5ab1b5e4d2bf2d426907161f20672a21930b", "e29e24dd6e7f39f200a5bb55dcaa645d38a397dd5a6674f6042ef02df5795046"]
-mypy-extensions = ["a161e3b917053de87dbe469987e173e49fb454eca10ef28b48b384538cc11458"]
+mypy-extensions = ["090fedd75945a69ae91ce1303b5824f428daf5a028d2f6ab8a299250a846f15d", "2d82818f5bb3e369420cb3c4060a7970edba416647068eb4c5343488a6c604a8"]
 packaging = ["28b924174df7a2fa32c1953825ff29c61e2f5e082343165438812f00d3a7fc47", "d9551545c6d761f3def1677baf08ab2a3ca17c56879e70fecba2fc4dde4ed108"]
 pbr = ["2c8e420cd4ed4cec4e7999ee47409e876af575d4c35a45840d59e8b5f3155ab8", "b32c8ccaac7b1a20c0ce00ce317642e6cf231cf038f9875e0280e28af5bf7ac9"]
 pep8-naming = ["01cb1dab2f3ce9045133d08449f1b6b93531dceacb9ef04f67087c11c723cea9", "0ec891e59eea766efd3059c3d81f1da304d858220678bdc351aab73c533f2fbb"]
