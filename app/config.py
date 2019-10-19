@@ -5,10 +5,10 @@ from starlette.config import Config
 logging.basicConfig(level=logging.DEBUG)
 
 config = Config(".env")
-DEBUG = config("DEBUG", cast=bool, default=False)
+DEBUG: bool = config("DEBUG", cast=bool, default=False)
 
-TOKEN = config("TOKEN", cast=str)
-CONFIRMATION_TOKEN = config("CONFIRMATION_TOKEN", cast=str)
-GROUP_ID = config("GROUP_ID", cast=int)
-SERVER_URL = config("SERVER_URL", cast=str)
-API_VERSION = config("API_VERSION", cast=float, default=5.101)  # noqa: WPS432
+TOKEN: str = config("TOKEN", cast=str)
+CONFIRMATION_TOKEN: str = config("CONFIRMATION_TOKEN", cast=str)
+GROUP_ID: int = config("GROUP_ID", cast=int)
+SERVER_URL: str = config("SERVER_URL", cast=str)
+API_VERSION: str = config("API_VERSION", cast=str, default="5.101")

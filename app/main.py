@@ -3,8 +3,9 @@ from typing import Dict, List, Union
 import requests
 import vk
 from fastapi import FastAPI, HTTPException
-from starlette.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from starlette.responses import PlainTextResponse
+from starlette.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
+
 from app import config, resources
 from app.schemas.computer import Commands, Computer
 from app.schemas.messages import Message, MessageType, Registration
@@ -31,13 +32,19 @@ def group_computers_by_domain(computers: List[Computer]) -> Dict[str, List[Compu
     return computer_group
 
 
+def _bot_registration(event: Union[Message, Registration]) -> bool:
+    is_registration = event.type == MessageType.confirmation
+    is_group_correct = event.group_id == config.GROUP_ID  # type: ignore
+    return is_registration and is_group_correct
+
+
 @app.post("/callback", response_class=PlainTextResponse)
 def vk_callback(event: Union[Message, Registration]) -> str:
-    if event.type == MessageType.confirmation and event.group_id == config.GROUP_ID:
+    if _bot_registration(event):
         return config.CONFIRMATION_TOKEN
 
-    user_message = event.object.text
-    user_id = event.object.from_id
+    user_message = event.object.text  # type: ignore
+    user_id = event.object.from_id  # type: ignore
 
     if event.type != MessageType.message_new and user_message != Commands.computer_list:
         raise HTTPException(
