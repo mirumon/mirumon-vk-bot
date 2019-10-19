@@ -4,7 +4,7 @@ import requests
 import vk
 from fastapi import FastAPI, HTTPException
 from starlette.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
-
+from starlette.responses import PlainTextResponse
 from app import config, resources
 from app.schemas.computer import Commands, Computer
 from app.schemas.messages import Message, MessageType, Registration
@@ -31,7 +31,7 @@ def group_computers_by_domain(computers: List[Computer]) -> Dict[str, List[Compu
     return computer_group
 
 
-@app.post("/callback")
+@app.post("/callback", response_class=PlainTextResponse)
 def vk_callback(event: Union[Message, Registration]) -> str:
     if event.type == MessageType.confirmation and event.group_id == config.GROUP_ID:
         return config.CONFIRMATION_TOKEN
