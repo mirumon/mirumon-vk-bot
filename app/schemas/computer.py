@@ -10,4 +10,4 @@ class Computer(BaseModel):
 
 
 class Commands(str, Enum):  # noqa: WPS600
-    computer_list: str = "computers"
+    computer_list: str = "/computers"
