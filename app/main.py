@@ -1,4 +1,4 @@
-from typing import Dict, List, Union
+from typing import Dict, List, Union, cast
 
 import requests
 import vk
@@ -32,24 +32,27 @@ def group_computers_by_domain(computers: List[Computer]) -> Dict[str, List[Compu
     return computer_group
 
 
-def _bot_registration(event: Union[Message, Registration]) -> bool:
-    is_registration = event.type == MessageType.confirmation
-    is_group_correct = event.group_id == config.GROUP_ID  # type: ignore
-    return is_registration and is_group_correct
+def process_registration(event: Registration) -> bool:
+    return event.group_id == config.GROUP_ID
 
 
 @app.post("/callback", response_class=PlainTextResponse)
 def vk_callback(event: Union[Message, Registration]) -> str:
-    if _bot_registration(event):
-        return config.CONFIRMATION_TOKEN
+    if event.type == MessageType.confirmation:
+        if process_registration(cast(Registration, event)):
+            return config.CONFIRMATION_TOKEN
 
-    user_message = event.object.text  # type: ignore
-    user_id = event.object.from_id  # type: ignore
-
-    if event.type != MessageType.message_new and user_message != Commands.computer_list:
+    if event.type != MessageType.message_new:
         raise HTTPException(
             status_code=HTTP_400_BAD_REQUEST, detail=resources.EVENT_ERROR_TEXT
         )
+
+    event = cast(Message, event)
+    user_id = event.object.from_id
+
+    if event.object.text != Commands.computer_list:
+        return MessageType.message_result
+
     try:
         computers = get_computers_list()
     except RuntimeError:
