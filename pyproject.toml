@@ -1,25 +1,30 @@
 [tool.poetry]
 name = "mirumon-vk-bot"
-version = "0.1.0"
-description = "VK bot for mirumon monitoring service"
-authors = ["Opti213 <opti213@mail.ru>"]
-
+version = "0.0.1"
+description = ""
+authors = ["Leonid <amorilec@yandex.ru>", "Slyfoxy <khitrov34@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
-fastapi = "^0.42.0"
-loguru = "^0.3.2"
 uvicorn = "^0.9.0"
-aiovk = "^3.0"
-
+fastapi = "^0.42.0"
+vk = "^2.0"
+Mako = "^1.1"
 
 [tool.poetry.dev-dependencies]
-black = { version = "^18.3-alpha.0", allows-prereleases = true}
+black = {version = "^18.3-alpha.0", allows-prereleases = true}
 isort = "^4.3"
 autoflake = "^1.3"
 
-mypy = "^0.701.0"
-wemake-python-styleguide = "^0.12.4"
+wemake-python-styleguide = "^0.12.5"
+mypy = "^0.730.0"
+
+pytest = "^5.2"
+pytest-asyncio = "^0.10.0"
+pytest-cov = "^2.8"
+
+httpx = "^0.7.5"
+asgi-lifespan = "^0.4.2"
 flake8-fixme = "^1.1"
 
 
@@ -49,7 +54,6 @@ exclude = '''
   |docs
 )/
 '''
-
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
