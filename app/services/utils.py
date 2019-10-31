@@ -1,0 +1,48 @@
+import openpyxl
+from typing import Dict, List
+
+from app import config
+from app.resources import PROGRAMS_EXCEL_NAME
+from app.schemas.computers import ComputerItem, ProgramInfo
+from app.schemas.messages import Registration
+
+
+def group_computers_by_domain(computers: List[ComputerItem]) -> Dict[str, List[ComputerItem]]:
+    computer_group: Dict[str, List[ComputerItem]] = {}
+    for computer in computers:
+        if computer.domain in computer_group:
+            computer_group[computer.domain].append(computer)
+        else:
+            computer_group[computer.domain] = [computer]
+    return computer_group
+
+
+def check_group_id(event: Registration) -> bool:
+    return event.group_id == config.GROUP_ID
+
+
+def init_file_columns(worksheet):
+    worksheet.cell(row=1, column=1).value = "NAME"
+    worksheet.cell(row=1, column=2).value = "VENDOR"
+    worksheet.cell(row=1, column=3).value = "VERSION"
+    return worksheet
+
+
+def create_excel_file(programs_list: List[ProgramInfo]):
+    wb = openpyxl.Workbook()
+    sheet = wb.active
+    sheet.title = "new_sheet"
+    row = 2
+    col = 1
+    init_file_columns(sheet)
+    for program in (programs_list):
+        sheet.cell(row=row, column=col).value = program.name
+        sheet.cell(row=row, column=col + 1).value = program.vendor
+        sheet.cell(row=row, column=col + 2).value = program.version
+        """
+        ws.write(row, col, program.name)
+        ws.write(row, col + 1, program.vendor)
+        ws.write(row, col + 2, program.version)
+        """
+        row += 1
+    wb.save(PROGRAMS_EXCEL_NAME)
