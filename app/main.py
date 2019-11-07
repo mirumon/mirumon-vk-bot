@@ -10,7 +10,7 @@ from app import config, resources
 from app.schemas.computer import Commands, Computer
 from app.schemas.messages import Message, MessageType, Registration
 
-app = FastAPI()
+app = FastAPI(title="Mirumon VK Bot", version=config.BOT_VERSION, debug=config.DEBUG)
 session = vk.Session()
 api = vk.API(session, v=config.API_VERSION)
 
