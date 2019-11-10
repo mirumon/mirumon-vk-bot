@@ -27,8 +27,7 @@ def vk_callback(event: Union[Message, Registration]) -> str:
     try:
         command, computer_id = event.object.text.split(" ", 1)
     except ValueError:
-        command = event.object.text
-        computer_id = ""
+        command, computer_id = event.object.text, ""
 
     handle_command(command, computer_id.strip(), user_id)
 

@@ -1,4 +1,5 @@
 from enum import Enum
+from random import randint
 
 from app.services.send_handler import send_computer_list, send_installed_programs
 
@@ -10,7 +11,7 @@ class Commands(str, Enum):  # noqa: WPS600
 
 def handle_command(command: str, arg: str, user_id: int):
     func = COMMANDS_HANDLERS[command]  # TODO check null ptr
-    func(user_id=user_id, computer_id=arg)
+    func(user_id=user_id, computer_id=arg, random_id=randint(1, 10000000))
 
 
 COMMANDS_HANDLERS = {
