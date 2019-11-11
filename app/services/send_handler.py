@@ -5,8 +5,8 @@ import vk
 from typing import List
 
 from app import config
-from app.resources import PROGRAMS_EXCEL_NAME, COMPUTERS_LIST_TEMPLATE, \
-    COMPUTERS_LIST_EMPTY_TEXT, BASE_VK_URL, DOCS_SAVE_ENDPOINT
+from app.config import COMPUTERS_LIST_EMPTY_TEXT, PROGRAMS_EXCEL_NAME, BASE_VK_URL, DOCS_SAVE_ENDPOINT
+from app.resources import COMPUTERS_LIST_TEMPLATE
 from app.schemas.computers import ProgramInfo
 from app.services.mirumon_api import get_computers_list, get_programs_list, BadResponse
 from app.services.utils import group_computers_by_domain, create_excel_file
@@ -28,13 +28,13 @@ def send_computer_list(user_id: int, random_id: int, computer_id: str):
         message=text)
 
 
-def get_uploaded_file(url):
+def get_uploaded_file(url: str) -> str:
     response = httpx.post(url, files={'file': open(PROGRAMS_EXCEL_NAME, 'rb')})
     result = json.loads(response.text)
     return result['file']
 
 
-def get_attachable_file(file):
+def get_attachable_file(file: str) -> str:
     request_path = BASE_VK_URL + DOCS_SAVE_ENDPOINT
     params = {'file': file,
               'title': "programs",
@@ -65,7 +65,6 @@ def send_installed_programs(user_id: int, random_id: int, computer_id: int):
         text = exception
         attach = ''
 
-    print(random_id)
     api.messages.send(access_token=config.TOKEN,
                       user_id=user_id,
                       random_id=random_id,

@@ -1,8 +1,9 @@
 import openpyxl
+from openpyxl.worksheet.worksheet import Worksheet
 from typing import Dict, List
 
 from app import config
-from app.resources import PROGRAMS_EXCEL_NAME
+from app.config import PROGRAMS_EXCEL_NAME
 from app.schemas.computers import ComputerItem, ProgramInfo
 from app.schemas.messages import Registration
 
@@ -21,11 +22,10 @@ def check_group_id(event: Registration) -> bool:
     return event.group_id == config.GROUP_ID
 
 
-def init_file_columns(worksheet):
+def init_file_columns(worksheet: Worksheet):
     worksheet.cell(row=1, column=1).value = "NAME"
     worksheet.cell(row=1, column=2).value = "VENDOR"
     worksheet.cell(row=1, column=3).value = "VERSION"
-    return worksheet
 
 
 def create_excel_file(programs_list: List[ProgramInfo]):
@@ -39,10 +39,5 @@ def create_excel_file(programs_list: List[ProgramInfo]):
         sheet.cell(row=row, column=col).value = program.name
         sheet.cell(row=row, column=col + 1).value = program.vendor
         sheet.cell(row=row, column=col + 2).value = program.version
-        """
-        ws.write(row, col, program.name)
-        ws.write(row, col + 1, program.vendor)
-        ws.write(row, col + 2, program.version)
-        """
         row += 1
     wb.save(PROGRAMS_EXCEL_NAME)

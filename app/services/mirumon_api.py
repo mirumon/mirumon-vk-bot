@@ -18,14 +18,14 @@ def get_computers_list() -> List[ComputerItem]:
     response = client.get("/computers")
     if response.status_code != HTTP_200_OK:
         raise BadResponse(f"Server bad response, status code: {response.status_code}")
-    return [ComputerItem(**current) for current in response.json()]
+    return [ComputerItem(**program) for program in response.json()]
 
 
 def get_programs_list(computer_id: str) -> List[ProgramInfo]:
     try:
-        response = client.get(f"/computers/{computer_id}/installed-programs", timeout=15)
+        response = client.get(f"/computers/{computer_id}/installed-programs", timeout=config.SERVER_TIMEOUT)
     except client.exceptions.ReadTimeout:
         raise BadResponse("Server Timeout")
     if response.status_code != HTTP_200_OK:
         raise BadResponse(f"Server bad response, status code: {response.status_code}")
-    return [ProgramInfo(**current) for current in response.json()]
+    return [ProgramInfo(**program) for program in response.json()]
