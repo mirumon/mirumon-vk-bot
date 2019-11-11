@@ -8,7 +8,34 @@ from app.schemas.messages import Message, MessageType, Registration
 from app.services.commands_handler import handle_command
 from app.services.utils import check_group_id
 
+<<<<<<< HEAD
 app = FastAPI()
+=======
+app = FastAPI(title="Mirumon VK Bot", version=config.BOT_VERSION, debug=config.DEBUG)
+session = vk.Session()
+api = vk.API(session, v=config.API_VERSION)
+
+
+def get_computers_list() -> List[Computer]:
+    response = requests.get(f"{config.SERVER_URL}/computers")
+    if response.status_code != HTTP_200_OK:
+        raise RuntimeError("Server bad response")
+    return [Computer(**current) for current in response.json()]
+
+
+def group_computers_by_domain(computers: List[Computer]) -> Dict[str, List[Computer]]:
+    computer_group: Dict[str, List[Computer]] = {}
+    for computer in computers:
+        if computer.domain in computer_group:
+            computer_group[computer.domain].append(computer)
+        else:
+            computer_group[computer.domain] = [computer]
+    return computer_group
+
+
+def process_registration(event: Registration) -> bool:
+    return event.group_id == config.GROUP_ID
+>>>>>>> master
 
 
 @app.post("/callback", response_class=PlainTextResponse)

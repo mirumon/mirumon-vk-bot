@@ -2,7 +2,11 @@ import logging
 
 from starlette.config import Config
 
+from app.versions import get_app_version
+
 logging.basicConfig(level=logging.DEBUG)
+
+BOT_VERSION: str = get_app_version()
 
 config = Config(".env")
 DEBUG: bool = config("DEBUG", cast=bool, default=False)
