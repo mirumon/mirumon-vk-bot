@@ -24,9 +24,10 @@ def get_computers_list() -> List[ComputerItem]:
 
 def get_programs_list(computer_id: str) -> List[ProgramInfo]:
     try:
-        response = client.get(f"/computers/{computer_id}/installed-programs",
-                              timeout=config.SERVER_TIMEOUT
-                              )
+        response = client.get(
+            f"/computers/{computer_id}/installed-programs",
+            timeout=config.SERVER_TIMEOUT,
+        )
     except ReadTimeout:
         raise BadResponse("Server Timeout")
     if response.status_code != HTTP_200_OK:

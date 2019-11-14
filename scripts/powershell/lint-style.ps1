@@ -1,7 +1,2 @@
-#!/usr/bin/env bash
-
-set -e
-set -x
-
 black --check app tests
 isort --recursive app tests
