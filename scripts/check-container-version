@@ -12,6 +12,7 @@ function docker_tag_exists() {
     test $EXISTS = true
 }
 
+
 if [ -z "$1" ]; then
   echo 'Usage: ./check-container-version image[:tag]' >&2
   exit 1
