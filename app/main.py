@@ -1,13 +1,14 @@
-import vk
+
+from typing import Union, cast
+
 from fastapi import FastAPI, HTTPException
 from starlette.responses import PlainTextResponse
 from starlette.status import HTTP_400_BAD_REQUEST
-from typing import Union, cast
 
-from app import config, resources
+from app import config
 from app.schemas.messages import Message, MessageType, Registration
 from app.services.commands_handler import handle_command
-from app.services.utils import check_group_id
+from app.services.utils import check_group_id, get_random_id
 
 app = FastAPI(title="Mirumon VK Bot", version=config.BOT_VERSION, debug=config.DEBUG)
 
@@ -20,16 +21,18 @@ def vk_callback(event: Union[Message, Registration]) -> str:
 
     if event.type != MessageType.message_new:
         raise HTTPException(
-            status_code=HTTP_400_BAD_REQUEST, detail=resources.EVENT_ERROR_TEXT
+            status_code=HTTP_400_BAD_REQUEST, detail=config.EVENT_ERROR_TEXT
         )
 
     event = cast(Message, event)
     user_id = event.object.from_id
+    random_id = get_random_id()
+
     try:
         command, computer_id = event.object.text.split(" ", 1)
     except ValueError:
         command, computer_id = event.object.text, ""
 
-    handle_command(command, computer_id.strip(), user_id)
+    handle_command(command, computer_id.strip(), user_id, random_id)
 
     return MessageType.message_result

@@ -1,7 +1,11 @@
 from enum import Enum
-from random import randint
+from typing import Callable, Dict
 
-from app.services.send_handler import send_computer_list, send_installed_programs
+from app.services.send_handler import (
+    send_about_command_mistake,
+    send_computer_list,
+    send_installed_programs,
+)
 
 
 class Commands(str, Enum):  # noqa: WPS600
@@ -9,12 +13,16 @@ class Commands(str, Enum):  # noqa: WPS600
     program_list: str = "/programs"
 
 
-def handle_command(command: str, arg: str, user_id: int):
-    func = COMMANDS_HANDLERS[command]  # TODO check null ptr
-    func(user_id=user_id, computer_id=arg, random_id=randint(1, 10000000))
+def handle_command(command: str, arg: str, user_id: int, random_id: int) -> None:
+    try:
+        func = COMMANDS_HANDLERS[command]
+    except KeyError:
+        send_about_command_mistake(user_id, random_id)
+    else:
+        func(user_id=user_id, computer_id=arg, random_id=random_id)
 
 
-COMMANDS_HANDLERS = {
+COMMANDS_HANDLERS: Dict[str, Callable] = {
     Commands.computer_list: send_computer_list,
     Commands.program_list: send_installed_programs,
 }

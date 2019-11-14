@@ -1,20 +1,25 @@
-import json
+from typing import List
 
 import httpx
 import vk
-from typing import List
 
 from app import config
-from app.config import COMPUTERS_LIST_EMPTY_TEXT, PROGRAMS_EXCEL_NAME, BASE_VK_URL, DOCS_SAVE_ENDPOINT
+from app.config import (
+    BASE_VK_URL,
+    COMPUTERS_LIST_EMPTY_TEXT,
+    DOCS_SAVE_ENDPOINT,
+    PROGRAMS_EXCEL_NAME,
+    UNKNOWN_COMMAND,
+)
 from app.resources import COMPUTERS_LIST_TEMPLATE
-from app.schemas.computers import ProgramInfo
-from app.services.mirumon_api import get_computers_list, get_programs_list, BadResponse
-from app.services.utils import group_computers_by_domain, create_excel_file
+from app.schemas.computers import FileResponse, ProgramFile, ProgramInfo, ProgramURL
+from app.services.mirumon_api import BadResponse, get_computers_list, get_programs_list
+from app.services.utils import create_excel_file, group_computers_by_domain
 
 api = vk.API(vk.Session(), v=config.API_VERSION)
 
 
-def send_computer_list(user_id: int, random_id: int, computer_id: str):
+def send_computer_list(user_id: int, random_id: int, computer_id: str) -> None:
     computer_list = get_computers_list()
     if computer_list:
         computers_group = group_computers_by_domain(computer_list)
@@ -25,49 +30,63 @@ def send_computer_list(user_id: int, random_id: int, computer_id: str):
         access_token=config.TOKEN,
         user_id=user_id,
         random_id=random_id,
-        message=text)
+        message=text
+    )
 
 
 def get_uploaded_file(url: str) -> str:
-    response = httpx.post(url, files={'file': open(PROGRAMS_EXCEL_NAME, 'rb')})
-    result = json.loads(response.text)
-    return result['file']
+    response = httpx.post(url, files={'file': open(PROGRAMS_EXCEL_NAME, 'rb')})  # noqa: Q000
+    json_result = response.json()
+    return ProgramFile.parse_obj(json_result).file
 
 
-def get_attachable_file(file: str) -> str:
+def get_attachable_endpoint(new_file: str) -> str:
     request_path = BASE_VK_URL + DOCS_SAVE_ENDPOINT
-    params = {'file': file,
-              'title': "programs",
-              'tags': "programs",
-              'v': config.API_VERSION,
-              'access_token': config.TOKEN
-              }
+    query_params = {'file': new_file,
+                    'title': "programs",
+                    'tags': "programs",
+                    'v': config.API_VERSION,
+                    'access_token': config.TOKEN
+                    }
 
-    json_answer = httpx.get(request_path, params=params).json()
-    about_file = json_answer['response']['doc']
-    return f"doc{about_file['owner_id']}_{about_file['id']}"
+    json_result = httpx.get(request_path, params=query_params).json()
+    about_file = FileResponse.parse_obj(json_result)
+    return f"doc{about_file.response.doc.owner_id}_{about_file.response.doc.id}"
 
 
-def send_installed_programs(user_id: int, random_id: int, computer_id: int):
+def get_attachable_file(programs_list: List[ProgramInfo], user_id: int) -> str:
+    create_excel_file(programs_list)
+    upload_dict = api.docs.getMessagesUploadServer(
+        access_token=config.TOKEN,
+        type='doc',
+        peer_id=user_id
+    )
+    url_object = ProgramURL(**upload_dict)
+    new_file = get_uploaded_file(url_object.upload_url)
+    return get_attachable_endpoint(new_file)
+
+
+def send_installed_programs(user_id: int, random_id: int, computer_id: str) -> None:
     try:
         programs_list: List[ProgramInfo] = get_programs_list(computer_id)
-        text = f"Программы, установленные на '{computer_id}' компьютере:"
-        create_excel_file(programs_list)
-        upload_url = api.docs.getMessagesUploadServer(
-            access_token=config.TOKEN,
-            type='doc',
-            peer_id=user_id)['upload_url']
-
-        file = get_uploaded_file(upload_url)
-        attach = get_attachable_file(file)
-
     except BadResponse as exception:
-        text = exception
+        text = str(exception)
         attach = ''
+    else:
+        text = f"Программы, установленные на '{computer_id}' компьютере:"
+        attach = get_attachable_file(programs_list, user_id)
 
     api.messages.send(access_token=config.TOKEN,
                       user_id=user_id,
                       random_id=random_id,
                       message=text,
                       attachment=attach
+                      )
+
+
+def send_about_command_mistake(user_id: int, random_id: int) -> None:
+    api.messages.send(access_token=config.TOKEN,
+                      user_id=user_id,
+                      random_id=random_id,
+                      message=UNKNOWN_COMMAND
                       )
